@@ -1,7 +1,19 @@
+#!/usr/bin/env python
+"""
+This script takes in a valid COSE signature envelope and prints out to standard
+output the SHA256 thumbprints of the certificate chain under x5chain of the
+COSE envelope. 
+The printout order is as follows: [leaf cert, intermediate cert, ..., root cert]
+
+Usage:
+python generate-cert-chain-thumbprint.py -f ./cose_signature_envelope.sig
+python generate-cert-chain-thumbprint.py --file_path ./cose_signature_envelope.sig
+"""
 import cbor2
 import argparse
 import hashlib
 
+#https://github.com/notaryproject/notaryproject/blob/main/specs/signature-envelope-cose.md#unprotected-headers
 COSE_X5CHAIN = 33
 
 def cert_chain_sha256(file_path):

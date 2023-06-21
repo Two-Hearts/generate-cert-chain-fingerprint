@@ -1,6 +1,9 @@
 # generate-cert-chain-thumbprint
-Python script to generate certificate chain SHA256 thumbprints from COSE signature envelope. <br>
+This script takes in a valid COSE signature envelope and prints out to standard
+output the SHA256 thumbprints of the certificate chain under x5chain of the
+COSE envelope.<br>
+The printout order is as follows: [leaf cert, intermediate cert, ..., root cert]
 
 ## Usage
-`python3 generate-cert-chain-thumbprint.py -f ./cose_signature_envelope.sig` <br>
-`python3 generate-cert-chain-thumbprint.py --file_path ./cose_signature_envelope.sig`
+`python generate-cert-chain-thumbprint.py -f ./cose_signature_envelope.sig` <br>
+`python generate-cert-chain-thumbprint.py --file_path ./cose_signature_envelope.sig`
