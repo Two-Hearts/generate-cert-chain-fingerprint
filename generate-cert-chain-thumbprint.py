@@ -12,18 +12,24 @@ python generate-cert-chain-thumbprint.py --file_path ./cose_signature_envelope.s
 import cbor2
 import argparse
 import hashlib
+import json
 
 #https://github.com/notaryproject/notaryproject/blob/main/specs/signature-envelope-cose.md#unprotected-headers
 COSE_X5CHAIN = 33
 
 def cert_chain_sha256(file_path):
     with open(file_path, 'rb') as fp:
-        cose_sign1 = cbor2.decoder.load(fp).value
+        cose_obj = cbor2.decoder.load(fp)
+        # A tagged COSE_Sign1 structure is identified by the CBOR tag 18.
+        # https://datatracker.ietf.org/doc/html/rfc8152#section-4.2
+        if cose_obj.tag != 18:
+            raise Exception("The tagged COSE_Sign1 structure requires tag 18, got {}".format(cose_obj.tag))
+        cose_sign1 = cose_obj.value
         ###
         #    The COSE_Sign1 structure is a CBOR array. The fields of the array
         #    in order are:
         #    protected
-        #    unprotected: the certificat chain is included here
+        #    unprotected: the certificate chain we want is included here
         #    payload
         #    signature
         ###
@@ -38,7 +44,7 @@ def cert_chain_sha256(file_path):
             h = hashlib.new('sha256')
             h.update(cert)
             results.append(h.hexdigest())
-        print(str(results))
+        return json.dumps(results)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -47,4 +53,5 @@ if __name__ == "__main__":
         help='file path of a single COSE signature envelope', required=True, 
         nargs=1, dest="file_path")
     args = parser.parse_args()
-    cert_chain_sha256(args.file_path[0])
+    thumbprints_json = cert_chain_sha256(args.file_path[0])
+    print(thumbprints_json)
