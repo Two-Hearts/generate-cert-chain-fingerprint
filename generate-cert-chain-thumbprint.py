@@ -14,16 +14,18 @@ import argparse
 import hashlib
 import json
 
+# A tagged COSE_Sign1 structure is identified by the CBOR tag 18.
+# https://datatracker.ietf.org/doc/html/rfc8152#section-4.2
+COSE_Sign1_TAG=18
+
 #https://github.com/notaryproject/notaryproject/blob/main/specs/signature-envelope-cose.md#unprotected-headers
 COSE_X5CHAIN = 33
 
 def cert_chain_sha256(file_path):
     with open(file_path, 'rb') as fp:
         cose_obj = cbor2.decoder.load(fp)
-        # A tagged COSE_Sign1 structure is identified by the CBOR tag 18.
-        # https://datatracker.ietf.org/doc/html/rfc8152#section-4.2
-        if cose_obj.tag != 18:
-            raise Exception("The tagged COSE_Sign1 structure requires tag 18, got {}".format(cose_obj.tag))
+        if cose_obj.tag != COSE_Sign1_TAG:
+            raise Exception("The tagged COSE_Sign1 structure requires tag {}, got {}".format(COSE_Sign1_TAG, cose_obj.tag))
         cose_sign1 = cose_obj.value
         ###
         #    The COSE_Sign1 structure is a CBOR array. The fields of the array
