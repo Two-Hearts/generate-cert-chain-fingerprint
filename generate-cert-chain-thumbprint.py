@@ -16,7 +16,7 @@ import json
 
 # A tagged COSE_Sign1 structure is identified by the CBOR tag 18.
 # https://datatracker.ietf.org/doc/html/rfc8152#section-4.2
-COSE_Sign1_TAG=18
+COSE_Sign1_TAG = 18
 
 #https://github.com/notaryproject/notaryproject/blob/main/specs/signature-envelope-cose.md#unprotected-headers
 COSE_X5CHAIN = 33
