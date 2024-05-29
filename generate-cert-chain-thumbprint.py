@@ -23,7 +23,7 @@ COSE_X5CHAIN = 33
 
 def cert_chain_sha256(file_path):
     with open(file_path, 'rb') as fp:
-        cose_obj = cbor2.decoder.load(fp)
+        cose_obj = cbor2.load(fp)
         if cose_obj.tag != COSE_Sign1_TAG:
             raise Exception("The tagged COSE_Sign1 structure requires tag {}, got {}".format(COSE_Sign1_TAG, cose_obj.tag))
         cose_sign1 = cose_obj.value
